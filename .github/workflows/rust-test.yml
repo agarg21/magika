@@ -38,10 +38,9 @@ jobs:
           persist-credentials: false
       - run: rustup default ${{ matrix.toolchain }}
       - run: rustup component add rustfmt clippy
-      # A new nightly ships every day, so its cache would rarely be hit and would
-      # only take quota away from the stable entries.
-      - if: matrix.toolchain == 'stable'
-        uses: ./.github/actions/rust-cache
+      # The cache key includes the rustc version, so nightly gets one entry per
+      # nightly release, saved by the first push to main after it ships.
+      - uses: ./.github/actions/rust-cache
       - run: ./test.sh
         working-directory: rust
   tract:
